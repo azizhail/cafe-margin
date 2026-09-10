@@ -1,4 +1,6 @@
 const titles={overview:'نظرة عامة',products:'المنتجات والربحية',inventory:'المخزون والمشتريات',payroll:'الموظفون والرواتب',reports:'التقارير'};
+const supabaseConfig={url:'https://wdzgwaeypxvjizageueu.supabase.co',publishableKey:'sb_publishable_jE3dU62W7kl2ffOBf0qMqg_Pb3wvOew'};
+fetch(`${supabaseConfig.url}/rest/v1/shops?select=id&limit=1`,{headers:{apikey:supabaseConfig.publishableKey,Authorization:`Bearer ${supabaseConfig.publishableKey}`}}).then(response=>{if(!response.ok)throw new Error('Supabase connection failed');return response.json()}).then(()=>console.info('CafeMargin connected to Supabase')).catch(error=>console.warn(error.message));
 const credentialsKey='cafemargin-credentials';
 const sessionKey='cafemargin-authenticated';
 const saved=JSON.parse(localStorage.getItem(credentialsKey)||'null')||{username:'admin',password:'1234'};
