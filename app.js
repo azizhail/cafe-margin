@@ -20,6 +20,8 @@ async function addRecord(kind){if(!cloudSession){show('سجّل ببريد Supab
 function openAccount(){const user=prompt('اسم المستخدم المحلي الجديد',saved.username);if(!user)return;const password=prompt('الرقم السري المحلي الجديد، اتركه فارغًا للإبقاء عليه')||saved.password;localStorage.setItem(localKey,JSON.stringify({username:user,password}));show('تم تحديث الحساب المحلي. حساب Supabase يدار من إعدادات البريد')}
 function logout(){localStorage.removeItem('cafemargin-session');localStorage.removeItem('cafemargin-shop-id');window.location.reload()}
 function addLogoutButton(){if(document.querySelector('#logout'))return;const button=document.createElement('button');button.id='logout';button.className='settings';button.type='button';button.textContent='↪ تسجيل الخروج';button.onclick=logout;document.querySelector('.side-bottom')?.insertBefore(button,document.querySelector('.profile'))}
+function hideDemoCards(){if(!cloudSession)return;document.querySelectorAll('.kpi,.overview .grid,.summary,.report-cards,.report,.alerts,.supplies,.stock').forEach(element=>element.style.setProperty('display','none','important'))}
+setInterval(hideDemoCards,300);
 addStyles();
 document.querySelectorAll('[data-view]').forEach(button=>button.addEventListener('click',()=>activate(button.dataset.view)));
 document.querySelectorAll('.link').forEach(button=>button.addEventListener('click',()=>activate(button.dataset.view)));
