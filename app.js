@@ -5,6 +5,7 @@ const saved=JSON.parse(localStorage.getItem(localKey)||'null')||{username:'admin
 let cloudSession=JSON.parse(localStorage.getItem('cafemargin-session')||'null');
 let shopId=localStorage.getItem('cafemargin-shop-id');
 let userRole='';
+async function restoreInviteSession(){const params=new URLSearchParams(location.hash.replace(/^#/,'').replace(/^\?/,''));const accessToken=params.get('access_token');if(!accessToken)return false;const response=await fetch(`${config.url}/auth/v1/user`,{headers:{apikey:config.key,Authorization:`Bearer ${accessToken}`}});if(!response.ok)return false;const user=await response.json();cloudSession={access_token:accessToken,user};localStorage.setItem('cafemargin-session',JSON.stringify(cloudSession));history.replaceState(null,'',location.pathname+location.search);return true}
 const toast=document.querySelector('#toast');
 function show(message){if(!toast)return;toast.textContent=message;toast.classList.add('show');setTimeout(()=>toast.classList.remove('show'),2800)}
 async function api(path,options={}){const headers={'apikey':config.key,'Content-Type':'application/json',...(options.headers||{})};if(cloudSession?.access_token)headers.Authorization=`Bearer ${cloudSession.access_token}`;const response=await fetch(`${config.url}/rest/v1/${path}`,{...options,headers});const text=await response.text();if(!response.ok){const message=text&&text.trim()?text:`Request failed: ${response.status}`;throw new Error(message)};if(response.status===204||!text.trim())return null;try{return JSON.parse(text)}catch{return text}}
@@ -38,4 +39,4 @@ document.querySelector('#send')?.addEventListener('click',()=>show(cloudSession?
 document.querySelector('#export')?.addEventListener('click',()=>show('التصدير السحابي سيستخدم بيانات المحل الحالي'));
 document.querySelector('.settings')?.addEventListener('click',openAccount);
 document.querySelectorAll('.primary').forEach(button=>{const text=button.textContent;if(text.includes('إضافة منتج'))button.addEventListener('click',()=>addRecord('product'));if(text.includes('تسجيل توريد'))button.addEventListener('click',()=>addRecord('material'));if(text.includes('إضافة موظف'))button.addEventListener('click',()=>addRecord('employee'))});
-if(cloudSession){document.querySelector('.shell').style.display='flex';addLogoutButton();shopId=null;ensureShop().then(loadCloudDashboard).then(setupSalesRole).catch(()=>show('تعذر استعادة جلسة السحابة'))}else showLogin();
+restoreInviteSession().catch(()=>false).finally(()=>{if(cloudSession){document.querySelector('.shell').style.display='flex';addLogoutButton();shopId=null;ensureShop().then(loadCloudDashboard).then(setupSalesRole).catch(()=>show('تعذر استعادة جلسة السحابة'))}else showLogin()});
