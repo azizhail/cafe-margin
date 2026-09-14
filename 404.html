@@ -12,5 +12,10 @@
   <div id="app"></div>
   <div id="toast" role="status"></div>
   <script src="/cafe-margin/app.js?v=recovery-query-fix"></script>
+  <script>
+    if (location.pathname !== '/cafe-margin/index.html') {
+      location.replace('/cafe-margin/index.html' + location.search + location.hash);
+    }
+  </script>
 </body>
 </html>
