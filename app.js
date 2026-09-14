@@ -465,6 +465,7 @@ async function checkout(){
       })
     });
     const sale = saleRows?.[0];
+    if(!sale?.id) throw new Error('لم يُرجع الخادم رقم الفاتورة بعد حفظ البيع');
 
     await Promise.all(cart.map(item => api('sale_items', {
       method:'POST',
@@ -497,7 +498,8 @@ async function checkout(){
     show('تم تسجيل وتوثيق عملية البيع بنجاح 🟢');
     renderPos();
   }catch(error){
-    show('تعذر حفظ البيع: '+error.message);
+    const detail=String(error.message||'').replace(/[{}]/g,'').slice(0,180);
+    show('تعذر حفظ البيع: '+(detail||'تحقق من اتصال الحساب بقاعدة البيانات'));
   }
 }
 
