@@ -20,7 +20,7 @@ function renderPos(){
   view.innerHTML=`
     <div class="pos-topbar">
       <div class="pos-title-block">
-        <small class="muted">نقطة البيع الكاشير</small>
+        <div class="pos-eyebrow"><span class="live-dot"></span> نقطة البيع <span class="pos-shift">وردية مفتوحة</span></div>
         <h2>إنشاء طلب جديد</h2>
       </div>
       <div class="pos-actions-bar">
@@ -34,8 +34,12 @@ function renderPos(){
     </div>
     <div class="pos-layout">
       <div class="pos-catalog">
+        <div class="catalog-heading">
+          <div><small class="muted">كتالوج المنتجات</small><strong>اختر المنتجات لإضافتها للطلب</strong></div>
+          <span class="catalog-count">${products.length} منتج</span>
+        </div>
         <div class="toolbar pos-search-bar">
-          <input id="search" placeholder="🔍 ابحث برقم أو اسم المنتج..." autocomplete="off">
+          <span class="search-icon">⌕</span><input id="search" placeholder="ابحث عن منتج بالاسم..." autocomplete="off">
         </div>
         <div id="categories" class="categories">
           <button class="active" data-category="all">⚡ الكل</button>
@@ -49,7 +53,7 @@ function renderPos(){
           <button type="button" class="type-btn ${orderType==='delivery'?'active':''}" data-type="delivery">🚗 توصيل</button>
         </div>
         <div class="cart-head">
-          <h3>الطلب الحالي</h3>
+          <h3>الطلب الحالي <span id="cart-count" class="cart-count">0</span></h3>
           <button id="clear" class="btn-text-danger" type="button">تفريغ السلة</button>
         </div>
         <div id="cart-items" class="cart-items"></div>
@@ -257,6 +261,8 @@ function renderCart(){
     </div>
   `).join(''):'<p class="empty">لم تتم إضافة منتجات بعد في الطلب الحالي</p>';
 
+  const cartCount=document.querySelector('#cart-count');
+  if(cartCount)cartCount.textContent=cart.reduce((sum,item)=>sum+item.quantity,0);
   document.querySelector('#subtotal').textContent=`${totals.subtotal.toFixed(2)} ر.س`;
   document.querySelector('#discount-amount').textContent=`${totals.discountAmount.toFixed(2)} ر.س`;
   document.querySelector('#vat-amount').textContent=`${totals.vatAmount.toFixed(2)} ر.س`;
